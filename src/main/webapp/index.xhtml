@@ -1,0 +1,158 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+
+    <style type="text/css">
+        .ui-filter-column .ui-column-customfilter .custom-filter {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <div class="card">
+        <h5>Column Filtering</h5>
+        <h:form>
+            <p:dataTable var="pizza" value="#{pizzaView.pizzas}" widgetVar="pizzaTable" rowIndexVar="index"
+                         emptyMessage="No pizzas found with given criteria"
+                         filteredValue="#{pizzaView.filteredPizzas1}">
+
+                <f:facet name="header">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        <span>List of Pizzas</span>
+                    </div>
+
+                </f:facet>
+
+                <p:column headerText="Pizza Name" sortBy="#{pizza.pizzaName}" filterBy="#{pizza.pizzaName}">
+                    <h:outputText value="#{pizza.pizzaName}" />
+                </p:column>
+
+                <p:column headerText="Pizza Size" sortBy="#{pizza.pizzaSize}" filterBy="#{pizza.pizzaSize}">
+                    <h:outputText value="#{pizza.pizzaSize}" />
+                </p:column>
+
+                <p:column headerText="Pizza Price" sortBy="#{pizza.pizzaPrice}" filterBy="#{pizza.pizzaPrice}">
+                    <h:outputText value="#{pizza.pizzaPrice}" />
+                </p:column>
+
+                <p:column headerText="Customer Name" sortBy="#{pizza.customerName}" filterBy="#{pizza.customerName}">
+                    <h:outputText value="#{pizza.customerName}" />
+                </p:column>
+
+                <p:column headerText="Customer Street" sortBy="#{pizza.customerStreet}" filterBy="#{pizza.customerStreet}">
+                    <h:outputText value="#{pizza.customerStreet}" />
+                </p:column>
+
+                <p:column headerText="Customer City" sortBy="#{pizza.customerCity}" filterBy="#{pizza.customerCity}">
+                    <h:outputText value="#{pizza.customerCity}" />
+                </p:column>
+
+                <p:column style="width:3rem;text-align: center">
+                    <p:commandButton update=":pizzaDetail" oncomplete="PF('pizzaDialog').show()"
+                                     icon="pi pi-search" title="View">
+                        <f:setPropertyActionListener value="#{pizza}"
+                                                     target="#{pizzaView.selectedPizza}"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </div>
+
+    <div class="card">
+        <h5>Global Column Filtering</h5>
+        <h:form>
+            <p:dataTable var="pizza" value="#{pizzaView.pizzas}" widgetVar="pizzaTable2"
+                         emptyMessage="No pizzas found with given criteria"
+                         globalFilterFunction="#{pizzaView.globalFilterFunction}"
+                         filteredValue="#{pizzaView.filteredPizzas2}">
+
+                <f:facet name="header">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        <span>List of Pizzas</span>
+                        <div class="p-d-flex p-jc-end">
+                            <p:inputText id="globalFilter" onkeyup="PF('pizzaTable2').filter()" style="width:300px"
+                                         placeholder="Search all fields using global function" />
+                        </div>
+                    </div>
+
+                </f:facet>
+
+                <p:column headerText="Pizza Name" sortBy="#{pizza.pizzaName}" filterable="false">
+                    <h:outputText value="#{pizza.pizzaName}" />
+                </p:column>
+
+                <p:column headerText="Pizza Size" sortBy="#{pizza.pizzaSize}" filterable="false">
+                    <h:outputText value="#{pizza.pizzaSize}" />
+                </p:column>
+
+                <p:column headerText="Pizza Price" sortBy="#{pizza.pizzaPrice}" filterable="false">
+                    <h:outputText value="#{pizza.pizzaPrice}" />
+                </p:column>
+
+                <p:column headerText="Customer Name" sortBy="#{pizza.customerName}" filterable="false">
+                    <h:outputText value="#{pizza.customerName}" />
+                </p:column>
+
+                <p:column headerText="Customer Street" sortBy="#{pizza.customerStreet}" filterable="false">
+                    <h:outputText value="#{pizza.customerStreet}" />
+                </p:column>
+
+                <p:column headerText="Customer City" sortBy="#{pizza.customerCity}" filterable="false">
+                    <h:outputText value="#{pizza.customerCity}" />
+                </p:column>
+
+                <p:column style="width:3rem;text-align: center">
+                    <p:commandButton update=":pizzaDetail" oncomplete="PF('pizzaDialog').show()"
+                                     icon="pi pi-search" title="View">
+                        <f:setPropertyActionListener value="#{pizza}"
+                                                     target="#{pizzaView.selectedPizza}"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </div>
+
+    <p:dialog header="Pizza Info" widgetVar="pizzaDialog" modal="true" showEffect="fade"
+              hideEffect="fade" resizable="false">
+        <p:outputPanel id="pizzaDetail" style="text-align:center;">
+            <p:column rendered="#{not empty pizzaView.selectedPizza}">
+                <div class="product">
+                    <div class="product-grid-item card" style="margin-bottom: 0">
+                        <div class="product-grid-item-top">
+                            <div>
+                                <i class="pi pi-tag product-category-icon"/>
+                                <span class="product-category">#{pizzaView.selectedPizza.customerName}</span>
+                            </div>
+                            <div>
+                                <div>#{pizzaView.selectedPizza.customerCity}</div>
+                                <div>#{pizzaView.selectedPizza.customerStreet}</div>
+                            </div>
+                        </div>
+                        <div class="product-grid-item-content">
+                            <div class="product-name">#{pizzaView.selectedPizza.pizzaName}</div>
+                            <div class="product-description">#{pizzaView.selectedPizza.pizzaDescription}</div>
+                            <div class="product-size">#{pizzaView.selectedPizza.pizzaSize} cm</div>
+                        </div>
+                        <div class="product-grid-item-bottom">
+                            <h:outputText value="#{pizzaView.selectedPizza.pizzaPrice}"
+                                          styleClass="product-price">
+                                <f:convertNumber currencySymbol="¢" type="currency"/>
+                            </h:outputText>
+                        </div>
+                    </div>
+                </div>
+            </p:column>
+        </p:outputPanel>
+    </p:dialog>
+
+</h:body>
+</html>
